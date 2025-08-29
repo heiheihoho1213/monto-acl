@@ -34,6 +34,7 @@ import { LoggerMiddleware } from './common/middleware/logger.middleware';
     JwtModule.register({
       secret: process.env.JWT_SECRET || 'your-secret-key',
       signOptions: { expiresIn: '24h' },
+      global: true, // 设为全局模块
     }),
     PassportModule,
     UserModule,
