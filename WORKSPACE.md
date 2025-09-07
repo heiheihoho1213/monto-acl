@@ -7,7 +7,7 @@
 ```
 acl-pro/
 ├── backend/          # 后端服务 (Node.js + Express + TypeScript)
-├── nest-backend/     # NestJS 后端服务 (重构版本)
+├── monto-acl-be/     # NestJS 后端服务 (重构版本)
 ├── frontend/         # 前端应用 (React + TypeScript + Vite)
 ├── mysql/            # MySQL 数据库配置
 ├── package.json      # 根目录配置
@@ -92,7 +92,7 @@ pnpm docker:down
 ```bash
 # 在特定包中运行命令
 pnpm --filter monto-acl-be dev
-pnpm --filter nest-backend start:dev
+pnpm --filter monto-acl-be start:dev
 pnpm --filter monto-acl-fe dev
 
 # 在所有包中运行命令
@@ -103,12 +103,12 @@ pnpm run --parallel dev
 
 # 添加依赖到特定包
 pnpm --filter monto-acl-be add express
-pnpm --filter nest-backend add @nestjs/common
+pnpm --filter monto-acl-be add @nestjs/common
 pnpm --filter monto-acl-fe add react
 
 # 添加开发依赖
 pnpm --filter monto-acl-be add -D @types/express
-pnpm --filter nest-backend add -D @nestjs/cli
+pnpm --filter monto-acl-be add -D @nestjs/cli
 ```
 
 ## 项目配置
@@ -119,7 +119,7 @@ pnpm --filter nest-backend add -D @nestjs/cli
 - 框架: Express + TypeScript
 - 构建工具: SWC
 
-### NestJS 后端 (nest-backend/)
+### NestJS 后端 (monto-acl-be/)
 - 端口: 3000 (默认)
 - 数据库: MySQL
 - 框架: NestJS + TypeScript

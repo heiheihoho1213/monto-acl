@@ -5,4 +5,5 @@ export interface LoginParamsType {
 
 export interface LoginResponseData {
   jwt_token: string;
+  user: string;
 }

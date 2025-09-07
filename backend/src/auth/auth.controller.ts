@@ -50,7 +50,7 @@ export class AuthController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('profile')
+  @Get('userInfo')
   @ApiOperation({
     summary: '获取用户信息',
     description: '获取当前登录用户的详细信息'
@@ -83,7 +83,7 @@ export class AuthController {
     status: 401,
     description: '未授权访问，需要有效的JWT token'
   })
-  getProfile(@Request() req, @Res() res: Response) {
+  getUserInfo(@Request() req, @Res() res: Response) {
     return ResponseUtil.success(res, req.user, '获取用户信息成功');
   }
 }

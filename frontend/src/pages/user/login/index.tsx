@@ -8,7 +8,7 @@ import { useI18n } from '@/store/i18n';
 
 import { setToken } from '@/utils/localToken';
 import { ResponseData } from '@/utils/request';
-import { LoginParamsType, LoginResponseData } from './data.d';
+import { LoginParamsType, LoginResponseData } from './data';
 import { accountLogin } from './service';
 
 import style from './index.module.less';

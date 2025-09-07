@@ -1,5 +1,5 @@
 -- 选择数据库
-USE uacl;
+USE montoacl;
 
 -- 创建 t_namespace 表
 CREATE TABLE IF NOT EXISTS `t_namespace` (

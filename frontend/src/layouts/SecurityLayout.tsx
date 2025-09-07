@@ -31,12 +31,8 @@ export default memo(
           roles: data.roles || [],
         });
       } catch (error: any) {
-        if (error.message && error.message === 'CustomError') {
-          const { response } = error;
-          if (response) {
-            navigate('/user/login', { replace: true });
-          }
-        }
+        console.error(error);
+        // window.location.href = '/user/login';
       }
     }, []);
 

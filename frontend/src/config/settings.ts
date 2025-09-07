@@ -11,8 +11,8 @@ const settings: SettingsType = {
   siteTokenKey: 'monto_acl_react_token',
   ajaxHeadersTokenKey: 'jwt_token',
   ajaxResponseNoVerifyUrl: [
-    '/login', // 用户登录
-    '/userInfo', // 获取用户信息
+    '/auth/login', // 用户登录
+    '/auth/userInfo', // 获取用户信息
   ],
 
   /* 以下是针对所有 Layout 扩展字段 */

@@ -2,15 +2,16 @@
  * 自定义 request 网络请求工具,基于axios
  * @author duheng1992
  */
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { notification } from 'antd';
+
+import { LoginResponseData } from '@/pages/user/Login/data';
 import settings from '@/config/settings';
 import { getToken } from '@/utils/localToken';
 
-export interface ResponseData<T = unknown> {
-  ret_code: number;
-  data: {
-    data: T;
+export interface ResponseData<T = LoginResponseData> {
+  code: number;
+  data: T | {
     [key: string]: any;
   };
   message?: string;
@@ -42,45 +43,14 @@ const serverCodeMessage: { [key: number]: string } = {
   504: 'Gateway Timeout',
 };
 
-const errorHandler = (error: any) => {
-  const { response, message } = error;
-  if (message === 'CustomError') {
-    // 自定义错误
-    const { config, data } = response;
-    const { url, baseURL } = config;
-    const { ret_code, message } = data;
-    const reqUrl = url.split('?')[0].replace(baseURL, '');
-    const noVerifyBool = settings.ajaxResponseNoVerifyUrl.includes(reqUrl);
-    if (!noVerifyBool) {
-      notification.error({
-        message: `提示 (Tips)`,
-        description: customCodeMessage[ret_code] || message || 'Error',
-      });
+const errorHandler = (error: AxiosError<ResponseData>) => {
+  const { message, response } = error;
+  const errorText = serverCodeMessage[response?.status as number];
 
-      console.log(`当前code: ${ret_code}`);
-      if (ret_code === 10005 && ret_code === 10009) {
-        setTimeout(() => {
-          window.location.href = '/user/login';
-        }, 500);
-      }
-    }
-  } else if (message === 'CancelToken') {
-    // TODO 取消请求 Token
-    // eslint-disable-next-line no-console
-    console.log(message);
-  } else if (response && response.status) {
-    const errorText = serverCodeMessage[response.status] || response.statusText;
-    const { status, request } = response;
-    notification.error({
-      message: `请求错误 ${status}: ${request.responseURL}`,
-      description: errorText,
-    });
-  } else if (!response) {
-    notification.error({
-      description: '您的网络发生异常，无法连接服务器',
-      message: '网络异常',
-    });
-  }
+  notification.error({
+    message: `请求错误 ${response?.status}: ${errorText}`,
+    description: message || '',
+  });
 
   return Promise.reject(error);
 };
@@ -91,7 +61,7 @@ const errorHandler = (error: any) => {
 const request = axios.create({
   baseURL: import.meta.env.VITE_APP_APIHOST || '',
   withCredentials: false, // 当跨域请求时不发送cookie
-  timeout: 5000, // 请求超时时间,5000(单位毫秒) / 0 不做限制
+  timeout: 30000, // 请求超时时间,5000(单位毫秒) / 0 不做限制
 });
 
 // 全局设置 - post请求头
@@ -131,14 +101,12 @@ request.interceptors.request.use(
  */
 request.interceptors.response.use(
   (response: AxiosResponse<ResponseData>) => {
-    const res = response.data || {};
-    const { ret_code } = res;
-
-    if (ret_code !== 0) {
-      // eslint-disable-next-line prefer-promise-reject-errors
+    const { status } = response;
+    
+    if (status !== 200) {
       return Promise.reject({
-        response,
-        message: 'CustomError',
+        ...response,
+        status
       });
     }
 
